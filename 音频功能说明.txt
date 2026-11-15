@@ -1,0 +1,26 @@
+人物音频资产（首版离线流程）
+
+每个选中的人物可指定一段原片台词，输出：
+audio/original.wav：原片片段，保留原有背景。
+audio/voice.wav：Demucs分离的人声版本。
+audio/background.wav：分离出的背景残差，供对照试听。
+audio/asset.json：角色编号、来源、时间段、处理方法和试听确认状态。
+character.json同步记录audio_assets，角色资产包导出时一并带上音频。
+
+运行环境：Python 3.11；依赖见requirements-audio.txt。
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python -r requirements-audio.txt
+
+运行示例（先将台词范围写入audio-clips.json）：
+.venv/bin/python extract_audio.py --video '/Users/w/Desktop/录屏2026-11-14 下午6.41.22.mov' --clips audio-clips.json --package output/sample-20261114-01-04
+
+首次有声处理需要下载htdemucs模型；之后在本机处理，不上传素材。
+缺失音轨时退出码为2，并记录source_has_no_audio；不会制造静音文件冒充音频资产。
+已有音频时拒绝覆盖；重复生成请复制为新的资产包目录。
+
+台词时间段由人工确认；当前预选的01、04时间段仅依据人物说话画面。
+本功能未实现自动说话人识别。多人同时讲话时，人声分离不会自动只保留指定人物。
+优先选择该人物独自说话、无重叠对白且句子完整的一段，再进行背景分离和试听确认。
+人声分离可抑制音乐与部分环境声，但不能保证全部去除，可能存在音色损伤。
+
+本次样片实际检查结果：仅有H.264视频轨，无音频轨；人物原声待补。

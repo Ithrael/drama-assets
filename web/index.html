@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f8"><meta name="description" content="从视频发现角色，将人物整理为完整、一致、可复用的创作资产。">
+  <title>幕间 · 人物资产工作台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23202531'/%3E%3Cpath d='M7 7h6v18H7zM19 7h6v18h-6z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <aside class="rail">
+    <a class="brand" href="/" aria-label="幕间首页"><svg viewBox="0 0 32 32" fill="none"><path d="M6 7h7v18H6zM19 7h7v18h-7z" fill="currentColor"/><path d="m13 7 6 9-6 9" stroke="currentColor" stroke-width="2.5"/></svg></a>
+    <button class="rail-btn active" id="workspace-nav" aria-label="人物工作台" title="人物工作台" data-icon="people"></button>
+    <button class="rail-btn" id="projects-nav" aria-label="项目记录" title="项目记录" data-icon="folder"></button>
+    <span class="rail-spacer"></span>
+    <button class="rail-btn" id="settings-nav" aria-label="模型设置" title="模型设置" data-icon="settings"></button>
+    <div class="avatar" title="本地工作空间">W</div>
+  </aside>
+  <div class="app">
+    <header class="topbar"><a href="/" class="wordmark">幕间 <span>studio</span></a><span class="top-divider"></span><span class="workspace-label">我的创作空间 <span class="local-tag">本地</span></span><div class="top-actions"><span id="connection"><i></i> 当前对话模型</span><button class="text-button" id="settings-top"><span data-icon="sliders"></span>模型设置</button></div></header>
+    <main>
+      <div class="page-heading"><div><div class="breadcrumb">创作工具 <span>/</span> 人物资产</div><h1>让每个角色，拥有完整的故事。</h1><p>从一段视频开始，建立一致、可复用的人物资产。</p></div><button class="button secondary" id="demo-button"><span data-icon="play"></span>体验样片</button></div>
+      <nav class="steps" aria-label="创作步骤"><div class="step current" id="step-upload"><b>1</b><span>导入视频</span></div><span class="step-line"></span><div class="step" id="step-analyze"><b>2</b><span>识别角色</span></div><span class="step-line"></span><div class="step" id="step-assets"><b>3</b><span>生成人物资产</span></div></nav>
+
+      <section class="workspace-grid">
+        <div class="source-column">
+          <section class="panel source-panel"><div class="panel-heading"><h2><span data-icon="film"></span>视频素材</h2><span class="small-label">Source</span></div>
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="上传视频"><input id="video-input" type="file" accept=".mp4,.mov,.webm,.mkv,.m4v" hidden><div class="upload-art"><span data-icon="upload"></span><i class="film-hole hole-1"></i><i class="film-hole hole-2"></i><i class="film-hole hole-3"></i><i class="film-hole hole-4"></i></div><h3>把故事拖到这里</h3><p>拖入视频文件，或点击选择</p><span class="upload-formats">MP4 / MOV / WebM / MKV / M4V</span><span class="upload-limit">最大 1 GB · 时长 60 分钟以内</span><span class="button primary compact">选择视频 <span data-icon="plus"></span></span></div>
+            <div class="video-preview" id="video-preview" hidden><video id="source-video" controls playsinline preload="metadata"></video><div class="video-info"><span data-icon="film"></span><div><strong id="video-name"></strong><p id="video-meta"></p></div><button id="replace-video" class="icon-button" aria-label="更换视频" title="更换视频" data-icon="refresh"></button></div></div>
+            <div class="source-note"><span data-icon="shield"></span><span>当前对话模型直接分析采样帧，无需分析 Key。</span></div>
+          </section>
+          <section class="panel recipe-panel"><div class="panel-heading"><h2><span data-icon="layers"></span>资产内容</h2><span class="count-pill" id="kind-count">5 项</span></div><div id="asset-options"></div><div class="recipe-footer"><span data-icon="sparkles"></span>保持同一角色的五官、服装与视觉风格</div></section>
+          <div class="reference-note"><span data-icon="info"></span><p>未在原片出现的背面、服饰等细节由 AI 补全，生成后可预览检查。</p></div>
+        </div>
+        <div class="results-column">
+          <section class="panel character-panel"><div class="panel-heading"><h2><span data-icon="people"></span>视频中的角色 <span id="character-count" class="count-pill">0</span></h2><button class="text-button" id="analyze-button" disabled><span data-icon="scan"></span>分析角色</button></div>
+            <div class="character-empty" id="character-empty"><div class="empty-cast"><span></span><span></span><span></span></div><div><strong>故事里的主角，在这里集合</strong><p>上传视频后，分析人物外观与跨镜头角色。</p></div></div>
+            <div id="characters" class="characters" hidden></div><label class="generation-scope" id="generation-scope" hidden><input id="all-characters" type="checkbox" checked>生成范围：全部角色 <span>点击角色可切换预览</span></label><div id="frame-section" hidden><div class="frames-heading"><span>采样关键帧</span><span id="frames-count"></span></div><div id="frames" class="frames"></div></div>
+          </section>
+          <section class="panel assets-panel"><div class="assets-toolbar"><div><h2>人物资产</h2><p id="assets-subtitle">从银幕中的一瞬，到完整的角色。</p></div><div class="asset-actions"><button class="button secondary" id="dashboard-button" disabled><span data-icon="screen"></span>展示大屏</button><button class="button secondary" id="download-button" disabled><span data-icon="download"></span>导出资产包</button><button class="button primary" id="generate-button" disabled><span data-icon="sparkles"></span>生成资产</button></div></div>
+            <div class="asset-tabs" id="asset-tabs"></div>
+            <div class="status-bar" id="status-bar" hidden aria-live="polite"><span class="spinner"></span><span id="status-text"></span><span id="progress-label"></span><div class="progress-track"><i id="progress-fill"></i></div></div>
+            <div class="conversation-request" id="conversation-request" hidden><strong>交给当前对话处理</strong><p>复制下面的指令到 Codex。结果写回后，这里会自动更新。</p><textarea id="conversation-prompt" readonly aria-label="Skill 调用指令"></textarea><button class="button secondary" id="copy-prompt">复制 Skill 指令</button></div><div class="error-box" id="error-box" hidden role="alert"></div>
+            <div class="asset-stage" id="asset-stage"><div class="stage-empty"><div class="example-composition" aria-hidden="true"><div class="example-portrait"><img src="/examples/character-01/edited/visible-portrait-transparent.png" alt="" loading="eager"></div><div class="example-views"><img src="/examples/character-01/generated/turnaround-front-side-back.png" alt="" loading="eager"><span>正面 / 侧面 / 背面</span></div><div class="example-badge"><span data-icon="check"></span>让角色始终如一</div></div><h3>一位角色，不止一个角度。</h3><p>将表情、形象与设定整理为完整资产，<br>为下一次创作做好准备。</p><button class="text-button" id="stage-demo">查看已有角色样片 <span data-icon="arrow"></span></button><span class="sample-caption">上图为项目已有 AI 样片</span></div></div>
+            <div class="stage-footer"><span><i class="tiny-dot"></i>人物参考驱动生成</span><span id="asset-total">5 类资产 · 完整角色档案</span></div>
+          </section>
+        </div>
+      </section>
+      <footer class="page-footer"><span class="footer-brand">幕间</span><span>让创作的每一幕，都有迹可循。</span><span class="footer-right">视频 → 角色 → 资产</span></footer>
+    </main>
+  </div>
+  <dialog id="settings-dialog"><form id="settings-form"><div class="dialog-heading"><div><h2>调用方式</h2><p>默认通过 Skill 使用当前对话模型，独立网页可选 API。</p></div><button type="button" class="icon-button" data-close="settings-dialog" aria-label="关闭" data-icon="x"></button></div><label>执行方式<select name="execution_mode"><option value="conversation">当前对话 · Skill（默认）</option><option value="api">独立 API 调用</option></select></label><p class="form-note">当前对话方式无需 Key：把页面产生的 Skill 指令发到 Codex，即可分析并制作资产。</p><div id="api-settings-fields"><label>API 地址<input name="base_url" type="url" placeholder="https://api.openai.com/v1"></label><label>API Key<input name="api_key" type="password" autocomplete="off" placeholder="输入 API Key"></label><div class="form-columns"><label>视觉分析模型<input name="vision_model" placeholder="填写服务提供的视觉模型名称"></label><label>图像编辑模型<input name="image_model" placeholder="填写支持参考图的图像模型名称"></label></div><p class="form-note">Key 只保存在本次服务进程内存，重启后需重新填写。图像模型需支持 /images/edits；保存设置不会发起付费生成。</p></div><div id="settings-error" class="error-box" hidden></div><div class="dialog-footer"><button type="button" class="button secondary" data-close="settings-dialog">取消</button><button class="button primary" type="submit">保存设置</button></div></form></dialog>
+  <dialog id="projects-dialog"><div class="dialog-heading"><div><h2>项目记录</h2><p>继续处理保存在本机的视频项目。</p></div><button class="icon-button" data-close="projects-dialog" aria-label="关闭" data-icon="x"></button></div><div id="project-list"></div></dialog>
+  <dialog id="preview-dialog"><div class="dialog-heading"><h2 id="preview-title">资产预览</h2><button class="icon-button" data-close="preview-dialog" aria-label="关闭" data-icon="x"></button></div><img id="preview-image" alt="人物资产放大预览"><a id="preview-download" class="button primary" download><span data-icon="download"></span>下载图片</a></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>

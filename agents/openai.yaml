@@ -1,0 +1,4 @@
+interface:
+  display_name: "幕间 · 视频人物资产"
+  short_description: "当前模型分析视频，默认制作全部角色的五类资产并生成可离线查看的展示大屏"
+  default_prompt: "使用 $drama-assets 分析这个视频，抽取全部可识别角色，为每位角色生成全部人物资产，最终交付展示大屏和资产包。"
